@@ -4,8 +4,7 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
-# 读取数据
-df = pd.read_csv('/Users/peiteer/Documents/ST1131/hdb_2017_2025Feb_sample.csv')
+df = pd.read_csv('hdb_2017_2025Feb_sample.csv')
 
 #task 1
 print(df.shape)
@@ -28,7 +27,7 @@ plt.figure(figsize=(10,6))
 bars = plt.bar(categories, frequencies, color='blue', edgecolor='black')
 for bar in bars:
     height = bar.get_height()
-    plt.text(bar.get_x() + bar.get_width()/2, height, f'{int(height)}', 
+    plt.text(bar.get_x() + bar.get_width()/2, height, f'{int(height)}',
              ha='center', va='bottom', fontsize=9)
 plt.title('The Frequencies of Flat Type')
 plt.xlabel('Flat Type')
@@ -51,7 +50,7 @@ plt.figure(figsize=(10,6))
 plt.hexbin(
     df['floor_area_sqm'],
     df['resale_price'],
-    gridsize=150,  
+    gridsize=150,
     cmap='plasma',
     bins='log',
     mincnt=1
@@ -74,7 +73,7 @@ plt.figure(figsize=(10,6))
 plt.hexbin(
     df['floor_area_sqm'],
     df['resale_price'],
-    gridsize=150,  
+    gridsize=150,
     cmap='plasma',
     bins='log',
     mincnt=1
@@ -98,6 +97,7 @@ print('R²:', r2)
 from sklearn.model_selection import train_test_split
 import lightgbm as lgb
 from lightgbm import early_stopping, log_evaluation
+import joblib
 
 df['street_name'] = df['street_name'].astype('category')
 df['flat_type'] = df['flat_type'].astype('category')
@@ -147,3 +147,5 @@ Y_pred_val = gbm.predict(X_val, num_iteration=gbm.best_iteration)
 print("MSE:", mean_squared_error(Y_val, Y_pred_val))
 print("MAE:", mean_absolute_error(Y_val, Y_pred_val))
 print("R2:", r2_score(Y_val, Y_pred_val))
+
+joblib.dump(gbm, "lgbm_hdb_model.pkl")
